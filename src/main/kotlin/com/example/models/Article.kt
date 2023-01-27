@@ -1,7 +1,9 @@
-package com.example.database
+package com.example.models
 
-import org.jetbrains.exposed.sql.*
+import kotlinx.serialization.Serializable
+import org.jetbrains.exposed.sql.Table
 
+@Serializable
 data class Article(val id: Int, val title: String, val body: String)
 
 object Articles : Table() {
