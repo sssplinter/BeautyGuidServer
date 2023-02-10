@@ -1,28 +1,28 @@
-package com.example.dao
+package com.example.sample
 
-import com.example.dao.DatabaseFactory.dbQuery
-import com.example.models.Article
-import com.example.models.Articles
+import com.example.data.db.DatabaseFactory.dbQuery
+import com.example.data.models.Article
+import com.example.data.models.Articles
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
-class DAOFacadeImpl : DAOFacade {
+class DAOFacadeImpl {
     private fun resultRowToArticle(row: ResultRow) = Article(
         id = row[Articles.id],
         title = row[Articles.title],
         body = row[Articles.body],
     )
 
-    override suspend fun allArticles(): List<Article> = dbQuery {
+    suspend fun allArticles(): List<Article> = dbQuery {
         Articles.selectAll().map(::resultRowToArticle)
     }
 
-    override suspend fun article(id: Int): Article? = dbQuery {
+    suspend fun article(id: Int): Article? = dbQuery {
         Articles.select { Articles.id eq id }.map(::resultRowToArticle).singleOrNull()
     }
 
-    override suspend fun addNewArticle(title: String, body: String): Article? = dbQuery {
+    suspend fun addNewArticle(title: String, body: String): Article? = dbQuery {
         val insertStatement = Articles.insert {
             it[Articles.title] = title
             it[Articles.body] = body
@@ -30,19 +30,19 @@ class DAOFacadeImpl : DAOFacade {
         insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToArticle)
     }
 
-    override suspend fun editArticle(id: Int, title: String, body: String): Boolean = dbQuery {
+    suspend fun editArticle(id: Int, title: String, body: String): Boolean = dbQuery {
         Articles.update({ Articles.id eq id }) {
             it[Articles.title] = title
             it[Articles.body] = body
         } > 0
     }
 
-    override suspend fun deleteArticle(id: Int): Boolean = dbQuery {
+    suspend fun deleteArticle(id: Int): Boolean = dbQuery {
         Articles.deleteWhere { Articles.id eq id } > 0
     }
 }
 
-val dao: DAOFacade = DAOFacadeImpl().apply {
+val dao = DAOFacadeImpl().apply {
     runBlocking {
         if (allArticles().isEmpty()) {
             addNewArticle("The drive to develop!", "...it's what keeps me going.")

@@ -1,31 +1,33 @@
 package com.example
 
-import com.example.dao.DatabaseFactory
-import com.example.features.login.configureLoginRouting
-import com.example.features.registration.configureRegisterRouting
-import com.example.plugins.configureRouting
+import com.example.data.db.DatabaseFactory
+import com.example.data.db.dao.UserCredentialsDao
+import com.example.data.db.dao.UsersDao
+import com.example.sample.registration.configureRegisterRouting
+import com.example.plugins.configureSecurity
+import com.example.plugins.configureSerialization
+import com.example.plugins.generateTokenConfig
+import com.example.routing.routing
 import io.ktor.serialization.kotlinx.json.*
-import io.ktor.server.application.Application
-import io.ktor.server.application.install
+import io.ktor.server.application.*
 import io.ktor.server.cio.*
-import io.ktor.server.engine.embeddedServer
 import io.ktor.server.plugins.contentnegotiation.*
-import kotlinx.serialization.json.Json
+import io.ktor.server.routing.*
 
-fun main() {
-    embeddedServer(CIO, port = 8080, host = "0.0.0.0", module = Application::module)
-        .start(wait = true)
+fun main(args: Array<String>) {
+//    embeddedServer(CIO, port = 8080, host = "0.0.0.0", module = Application::module)
+//        .start(wait = true)
+    //Такой старт нужен чтобы работал application.conf, вся настройка тоже в нем
+    EngineMain.main(args)
 }
 
+@Suppress("Unused")
 fun Application.module() {
-    install(ContentNegotiation) {
-        json(Json {
-            prettyPrint = true
-            isLenient = true
-        })
-    }
     DatabaseFactory.init()
-    configureRouting()
-    configureLoginRouting()
-    configureRegisterRouting()
+    val tokenConfig = generateTokenConfig()
+
+    configureSerialization()
+    configureSecurity(tokenConfig)
+    routing(tokenConfig)
 }
+
