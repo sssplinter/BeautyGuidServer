@@ -1,6 +1,8 @@
-package com.example.dao
+package com.example.data.db
 
-import com.example.models.Articles
+import com.example.data.db.table.UserCredentialsTable
+import com.example.data.db.table.UsersTable
+import com.example.data.models.Articles
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -15,6 +17,8 @@ object DatabaseFactory {
 
         transaction(database) {
             SchemaUtils.create(Articles)
+            SchemaUtils.create(UsersTable)
+            SchemaUtils.create(UserCredentialsTable)
         }
     }
 

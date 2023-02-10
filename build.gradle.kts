@@ -1,3 +1,4 @@
+//TODO перенести в buildSrc
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
@@ -13,7 +14,7 @@ plugins {
 group = "com.example"
 version = "0.0.1"
 application {
-    mainClass.set("com.example.ApplicationKt")
+    mainClass.set("${rootProject.group}.ApplicationKt")
 
     val isDevelopment: Boolean = project.ext.has("development")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
@@ -35,6 +36,14 @@ dependencies {
     implementation("com.h2database:h2:$h2_version")
 
     implementation("ch.qos.logback:logback-classic:$logback_version")
+
+    //Locations
+    implementation("io.ktor:ktor-server-locations:$ktor_version")
+
+    //Authorization
+    implementation("io.ktor:ktor-server-auth:$ktor_version")
+    implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
+    implementation("commons-codec:commons-codec:1.15")
 
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")

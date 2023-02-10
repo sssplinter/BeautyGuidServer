@@ -1,4 +1,4 @@
-package com.example.features.registration
+package com.example.sample.registration
 
 import kotlinx.serialization.Serializable
 

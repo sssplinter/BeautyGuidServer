@@ -1,4 +1,4 @@
-package com.example.plugins
+package com.example.sample
 
 import kotlinx.serialization.Serializable
 
