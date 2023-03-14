@@ -1,6 +1,12 @@
 package com.example.data.models
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class User(
     val id: Int = 0,
-    val username: String
+    var firstName: String = "",
+    var lastName: String = "",
+    var mobileNumber: String = "",
+    var email: String = ""
 )
