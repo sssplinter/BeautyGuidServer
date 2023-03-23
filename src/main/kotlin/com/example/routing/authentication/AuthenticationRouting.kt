@@ -8,12 +8,12 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.authenticationRouting() {
-    //проверят остается ли токен валидным
     authenticate {
         get("authenticate") {
             call.respond(HttpStatusCode.OK)
         }
 
+        // TODO remove
         get("secret") {
             val principal = call.principal<JWTPrincipal>()
             val userId = principal?.getClaim("userId", String::class)

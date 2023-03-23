@@ -5,8 +5,11 @@ import com.example.data.db.dao.UsersDao
 import com.example.data.models.User
 import com.example.data.models.UserCredentials
 import com.example.routing.login.LoginRequest
-import com.example.routing.routing
+import com.example.routing.login.LoginResponse
 import com.example.security.hashing.HashingService
+import com.example.security.token.TokenClaim
+import com.example.security.token.TokenConfig
+import com.example.security.token.TokenService
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -15,6 +18,8 @@ import io.ktor.server.routing.*
 
 fun Route.registrationRouting(
     hashingService: HashingService,
+    tokenService: TokenService,
+    tokenConfig: TokenConfig,
     userDao: UsersDao,
     userCredentialsDao: UserCredentialsDao
 ) {
@@ -31,22 +36,41 @@ fun Route.registrationRouting(
         }
 
         val saltedHash = hashingService.generateSaltedHash(request.password)
-        val user = User(
-            username = request.username,
-        )
-        val userCredentials = UserCredentials(
-            password = saltedHash.hash,
-            salt = saltedHash.salt
-        )
-        //проверка на то что норм удалось добавить в бд
-        //запихнуть бы под одну транзакцию
+
+        val user = User()
         val userWasAcknowledged = userDao.insertUser(user)
-        val credentialsWasAcknowledged = userCredentialsDao.insertUserCredentials(user.username, userCredentials)
-        if (!userWasAcknowledged || !credentialsWasAcknowledged) {
+
+        if (userWasAcknowledged == null) {
             call.respond(HttpStatusCode.Conflict)
             return@post
         }
 
-        call.respond(HttpStatusCode.OK)
+        val userCredentials = UserCredentials(
+            userName = request.username,
+            password = saltedHash.hash,
+            salt = saltedHash.salt,
+            userId = userWasAcknowledged.id
+        )
+        val credentialsWasAcknowledged = userCredentialsDao.insertUserCredentials(userCredentials)
+
+        if (!credentialsWasAcknowledged) {
+            call.respond(HttpStatusCode.Conflict)
+            return@post
+        }
+
+        val token = tokenService.generate(
+            config = tokenConfig,
+            TokenClaim(
+                name = "userId",
+                value = userWasAcknowledged.id.toString()
+            ),
+        )
+
+        call.respond(
+            status = HttpStatusCode.OK,
+            message = LoginResponse(
+                token = token
+            )
+        )
     }
 }

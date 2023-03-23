@@ -1,12 +1,16 @@
 package com.example.routing
 
+import com.example.data.db.dao.SalonDao
 import com.example.data.db.dao.UserCredentialsDao
 import com.example.data.db.dao.UsersDao
-import com.example.plugins.generateTokenConfig
 import com.example.routing.authentication.authenticationRouting
+import com.example.routing.images.getImage
 import com.example.routing.login.loginRouting
+import com.example.routing.personalData.get.getPersonalDataRouting
+import com.example.routing.personalData.save.updatePersonalData
 import com.example.routing.registration.registrationRouting
-import com.example.security.hashing.HashingService
+import com.example.routing.salon.all.getAllSalons
+import com.example.routing.salon.getSalonById
 import com.example.security.hashing.SHA256HashingService
 import com.example.security.token.JwtTokenService
 import com.example.security.token.TokenConfig
@@ -21,11 +25,17 @@ fun Application.routing(
 
     val userDao = UsersDao()
     val userCredentialsDao = UserCredentialsDao()
+    val salonDao = SalonDao()
 
     routing {
         authenticationRouting()
-        registrationRouting(hashingService, userDao, userCredentialsDao)
-        loginRouting(hashingService, tokenService, tokenConfig, userDao, userCredentialsDao)
+        registrationRouting(hashingService, tokenService, tokenConfig, userDao, userCredentialsDao)
+        loginRouting(hashingService, tokenService, tokenConfig, userCredentialsDao)
+        updatePersonalData(userDao)
+        getPersonalDataRouting(userDao)
+        getImage()
+        getSalonById(salonDao)
+        getAllSalons(salonDao)
     }
 
 }

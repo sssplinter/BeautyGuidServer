@@ -1,4 +1,4 @@
-package com.example.data.db.dao;
+package com.example.data.db.dao
 
 import com.example.data.db.DatabaseFactory.dbQuery
 import com.example.data.db.table.UserCredentialsTable
@@ -11,9 +11,10 @@ import org.jetbrains.exposed.sql.select
 class UserCredentialsDao {
 
     private fun resultRowToUserCredentials(row: ResultRow) = UserCredentials(
+        userId = row[UserCredentialsTable.userId].value,
+        userName = row[UserCredentialsTable.username],
         password = row[UserCredentialsTable.password],
-        salt = row[UserCredentialsTable.salt],
-    )
+        salt = row[UserCredentialsTable.salt])
 
     suspend fun fetchCredentialsByUsername(username: String): UserCredentials? = dbQuery {
         UserCredentialsTable
@@ -22,15 +23,14 @@ class UserCredentialsDao {
             .singleOrNull()
     }
 
-    //мб объединить под одну
     suspend fun insertUserCredentials(
-        username: String,
         userCredentials: UserCredentials
     ): Boolean = dbQuery {
         val insertStatement = UserCredentialsTable.insert {
-            it[UserCredentialsTable.username] = username
-            it[UserCredentialsTable.password] = userCredentials.password
-            it[UserCredentialsTable.salt] = userCredentials.salt
+            it[userId] = userCredentials.userId
+            it[username] = userCredentials.userName
+            it[password] = userCredentials.password
+            it[salt] = userCredentials.salt
         }
         insertStatement.resultedValues?.singleOrNull() != null
     }

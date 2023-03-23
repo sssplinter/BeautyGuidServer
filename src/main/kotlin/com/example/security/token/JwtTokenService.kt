@@ -10,7 +10,7 @@ class JwtTokenService : TokenService {
             .withAudience(config.audience)
             .withIssuer(config.issuer)
             .withExpiresAt(Date(System.currentTimeMillis() + config.expiresIn))
-        claims.forEach {claim ->
+        claims.forEach { claim ->
             token.withClaim(claim.name, claim.value)
         }
 

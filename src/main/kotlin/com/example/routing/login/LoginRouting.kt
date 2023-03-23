@@ -1,7 +1,6 @@
 package com.example.routing.login
 
 import com.example.data.db.dao.UserCredentialsDao
-import com.example.data.db.dao.UsersDao
 import com.example.security.hashing.HashingService
 import com.example.security.hashing.SaltedHash
 import com.example.security.token.TokenClaim
@@ -17,7 +16,6 @@ fun Route.loginRouting(
     hashingService: HashingService,
     tokenService: TokenService,
     tokenConfig: TokenConfig,
-    usersDao: UsersDao,
     userCredentialsDao: UserCredentialsDao
 ) {
     post("login") {
@@ -26,9 +24,8 @@ fun Route.loginRouting(
             return@post
         }
 
-        val user = usersDao.fetchUserByUsername(request.username)
         val userCredentials = userCredentialsDao.fetchCredentialsByUsername(request.username)
-        if (userCredentials == null || user == null) {
+        if (userCredentials == null ) {
             call.respond(HttpStatusCode.Conflict, "Incorrect username")
             return@post
         }
@@ -49,7 +46,7 @@ fun Route.loginRouting(
             config = tokenConfig,
             TokenClaim(
                 name = "userId",
-                value = user.id.toString()
+                value = userCredentials.userId.toString()
             ),
         )
 
