@@ -22,7 +22,7 @@ object DatabaseFactory {
             SchemaUtils.create(SalonTable)
             SchemaUtils.create(SpecialistMarkTable)
             SchemaUtils.create(SpecialistTable)
-            SchemaUtils.create(SalonM2MCategory)
+            SchemaUtils.create(SalonM2MCategoryTable)
         }
     }
 
