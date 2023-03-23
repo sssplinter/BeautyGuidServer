@@ -2,7 +2,7 @@ package com.example.data.db.dao
 
 import com.example.data.db.DatabaseFactory
 import com.example.data.db.table.CategoryTable
-import com.example.data.db.table.SalonM2MCategory
+import com.example.data.db.table.SalonM2MCategoryTable
 import com.example.data.db.table.SalonTable
 import com.example.data.models.Category
 import com.example.data.models.Salon
@@ -31,7 +31,7 @@ class SalonDao {
 
     suspend fun getSalonCategories(salonId: Int): List<String> = DatabaseFactory.dbQuery {
         val categories =
-            (SalonTable innerJoin SalonM2MCategory innerJoin CategoryTable).select(SalonTable.id eq salonId)
+            (SalonTable innerJoin SalonM2MCategoryTable innerJoin CategoryTable).select(SalonTable.id eq salonId)
                 .map(::resultRowToCategory)
         categories.map { it.name }
     }
