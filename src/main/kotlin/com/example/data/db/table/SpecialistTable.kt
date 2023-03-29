@@ -12,7 +12,6 @@ object SpecialistTable : IntIdTable("specialist", "specialist_id") {
     )
     val firstName = varchar("specialist_first_name", length = 255)
     val lastName = varchar("specialist_last_name", length = 255)
-    val password = varchar("user_credentials_password_hash", length = 255)
     val categoryId = reference(
         "category_id",
         CategoryTable.id,
