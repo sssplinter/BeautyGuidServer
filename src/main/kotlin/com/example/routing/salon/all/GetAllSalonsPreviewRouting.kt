@@ -12,18 +12,19 @@ fun Route.getAllSalons(salonDao: SalonDao) {
         get("allSalons") {
             val salons = salonDao.getAllSalons()
 
+            // TODO if list is empty
             if (salons.isEmpty()) {
                 call.respond(HttpStatusCode.BadRequest)
                 return@get
             }
 
-            val salonsPreview = salons.map {
+            val salonPreviews = salons.map {
                 SalonPreview(
                     salonId = it.id,
                     salonName = it.name,
                     salonDescription = it.description,
                     salonPhotoUrl = it.photoUrl,
-                    location = it.description,
+                    location = it.location,
                     rating = it.rating,
                     categories = salonDao.getSalonCategories(it.id)
                 )
@@ -31,7 +32,7 @@ fun Route.getAllSalons(salonDao: SalonDao) {
 
             call.respond(
                 status = HttpStatusCode.OK,
-                message = salonsPreview
+                message = salonPreviews
             )
         }
     }

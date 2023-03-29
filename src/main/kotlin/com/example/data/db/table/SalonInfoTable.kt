@@ -14,8 +14,8 @@ object SalonInfoTable : Table("salon_info") {
     val address = varchar("address", 500)
     val phoneNumber = varchar("phone_number", 20)
     val email= varchar("email", 255)
-    val webLink = varchar("email", 255)
-    val telegramLink = varchar("email", 255)
-    val instagramLink = varchar("email", 255)
-    val vkLink = varchar("email", 255)
+    val webLink = varchar("web_link", 255)
+    val telegramLink = varchar("telegram_link", 255)
+    val instagramLink = varchar("instagram_link", 255)
+    val vkLink = varchar("vk_link", 255)
 }

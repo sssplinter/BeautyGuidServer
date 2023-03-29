@@ -1,6 +1,7 @@
-package com.example.routing.salon
+package com.example.routing.salon.byId
 
 import com.example.data.db.dao.SalonDao
+import com.example.routing.salon.all.SalonPreview
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -11,7 +12,7 @@ fun Route.getSalonById(
     salonDao: SalonDao
 ) {
     authenticate {
-        get("getSalonById/{salonId}") {
+        get("salonPreview/{salonId}") {
             val salonId = call.parameters["salonId"]?.toIntOrNull()
 
             if (salonId == null) {
@@ -27,12 +28,14 @@ fun Route.getSalonById(
 
             call.respond(
                 status = HttpStatusCode.OK,
-                message = GetSalonResponse(
-                    id = salon.id,
-                    photoUrl = salon.photoUrl,
-                    name = salon.name,
-                    address = salon.description,
-                    rating = salon.rating
+                message = SalonPreview(
+                    salonId = salon.id,
+                    salonName = salon.name,
+                    salonDescription = salon.description,
+                    salonPhotoUrl = salon.photoUrl,
+                    location = salon.location,
+                    rating = salon.rating,
+                    categories = salonDao.getSalonCategories(salon.id)
                 )
             )
         }
