@@ -7,9 +7,9 @@ import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.getSalonNewsListRouting(salonNewsDao: SalonNewsDao) {
+fun Route.getSalonNewsPreviewListRouting(salonNewsDao: SalonNewsDao) {
     authenticate {
-        get("salonNewsList/{salonId}") {
+        get("salonNewsPreviewList/{salonId}") {
             val salonId = call.parameters["salonId"]?.toIntOrNull()
 
             if (salonId == null) {
@@ -17,7 +17,7 @@ fun Route.getSalonNewsListRouting(salonNewsDao: SalonNewsDao) {
                 return@get
             }
 
-            val salonNewsPreviews = salonNewsDao.getSalonNewsList(salonId)
+            val salonNewsPreviews = salonNewsDao.getSalonNewsPreviewsList(salonId)
 
             call.respond(
                 status = HttpStatusCode.OK,

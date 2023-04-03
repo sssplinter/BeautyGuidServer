@@ -12,6 +12,7 @@ import com.example.routing.registration.registrationRouting
 import com.example.routing.salon.all.getAllSalons
 import com.example.routing.salon.byId.getSalonById
 import com.example.routing.salon.info.getSalonInfo
+import com.example.routing.salonNews.getSalonNewsListRouting
 import com.example.routing.salonNews.getSalonNewsPreviewListRouting
 import com.example.routing.specialist.getAllSpecialistsPreviewRouting
 import com.example.security.hashing.SHA256HashingService
@@ -46,6 +47,7 @@ fun Application.routing(
         getSalonInfo(salonDao)
         getAllSpecialistsPreviewRouting(specialistDao, salonDao)
         getSalonNewsPreviewListRouting(salonNewsDao)
+        getSalonNewsListRouting(salonNewsDao)
     }
 
 }
