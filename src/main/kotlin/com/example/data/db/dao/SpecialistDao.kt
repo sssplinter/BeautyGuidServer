@@ -36,4 +36,8 @@ class SpecialistDao {
     suspend fun getAllSpecialists(): List<Specialist> = DatabaseFactory.dbQuery {
         SpecialistTable.selectAll().map(::resultRowToSpecialist)
     }
+
+    suspend fun getSpecialistsBySalonId(salonId: Int): List<Specialist> = DatabaseFactory.dbQuery {
+        SpecialistTable.select(SpecialistTable.salonId eq salonId).map(::resultRowToSpecialist)
+    }
 }

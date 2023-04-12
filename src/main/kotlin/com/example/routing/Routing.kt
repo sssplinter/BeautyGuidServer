@@ -15,6 +15,7 @@ import com.example.routing.salon.info.getSalonInfo
 import com.example.routing.salonNews.getSalonNewsListRouting
 import com.example.routing.salonNews.getSalonNewsPreviewListRouting
 import com.example.routing.specialist.getAllSpecialistsPreviewRouting
+import com.example.routing.specialist.getSpecialistsBySalonIdRouting
 import com.example.security.hashing.SHA256HashingService
 import com.example.security.token.JwtTokenService
 import com.example.security.token.TokenConfig
@@ -46,6 +47,7 @@ fun Application.routing(
         getAllSalons(salonDao)
         getSalonInfo(salonDao)
         getAllSpecialistsPreviewRouting(specialistDao, salonDao)
+        getSpecialistsBySalonIdRouting(specialistDao, salonDao)
         getSalonNewsPreviewListRouting(salonNewsDao)
         getSalonNewsListRouting(salonNewsDao)
     }
